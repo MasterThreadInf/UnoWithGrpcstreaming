@@ -27,35 +27,19 @@ namespace GrpcServer
                                                 .AllowAnyMethod();
                                       });
                 });
-            //services.AddSingleton<Resolverfactory>
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //app.UseCors(cors => cors
-            //   .AllowAnyMethod()
-            //   .AllowAnyHeader()
-            //   //.SetIsOriginAllowed(origin => true)
-            //   .AllowCredentials()
-            //   .WithOrigins("https://localhost:44366",
-            //                 "http://localhost:5000")
-            //   );
+           
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                //app.UseSwagger();
-                //app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Ch20Ex01 v1"));
             }
-            //app.UseHttpsRedirection();
+
             app.UseRouting();
-            //app.UseCors(builder =>
-            //{
-            //    builder.WithOrigins("https://localhost:44366", "http://localhost:5000")
-            //    .AllowCredentials()  
-            //    .AllowAnyHeader()
-            //    .AllowAnyMethod();
-            //});
+           
             app.UseCors();
             app.UseGrpcWeb();
             app.UseEndpoints(endpoints =>
