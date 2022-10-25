@@ -8,23 +8,14 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
 
-    <!--<Grid>
-    <TextBlock Text="Hello, world!" Margin="20" FontSize="30" />
-    </Grid>-->
-
     <StackPanel Margin="30" Spacing="20">
         <TextBlock FontSize="30" Text="Chatting App" />
-        <ComboBox Header="Fonts"
-              ItemsSource="{Binding Streaming}"
-              x:Name="font"
-              SelectedItem="{Binding SelectedStream, Mode=TwoWay}" />
 
         <TextBlock
             x:Name="Msgread"
             Height="300"
             FontSize="20"
             SelectionHighlightColor="blue">
-            received text message
         </TextBlock>
         <TextBox
             x:Name="MsgValue"
