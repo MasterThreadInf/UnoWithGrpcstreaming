@@ -58,20 +58,13 @@ namespace ChatTrialSolution
             services.AddSingleton<ResolverFactory>(factory);
             //GrpcClientFactory.AllowUnencryptedHttp2 = true;
             var httpHandler = new HttpClientHandler();
-            //httpHandler.ServerCertificateCustomValidationCallback =
-            //HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
-          
             var httpClient = new HttpClient(new GrpcWebHandler(GrpcWebMode.GrpcWeb, httpHandler));
-
-            //"https://localhost:44366"
-            //var options = new GrpcChannelOptions() { HttpClient= httpClient };
             var channel = GrpcChannel.ForAddress("static:///my-example-host", new GrpcChannelOptions { HttpClient = httpClient,
                 Credentials = ChannelCredentials.Insecure,
                 ServiceProvider = services.BuildServiceProvider(),
                 ServiceConfig = new ServiceConfig { LoadBalancingConfigs = { new RoundRobinConfig() } }
             });
-            //var channel = GrpcChannel.ForAddress("https://localhost:44366", new GrpcChannelOptions { HttpHandler = new GrpcWebHandler(new HttpClientHandler())});
-            try
+           try
             {
                 var client = new FooService.FooServiceClient(channel);
                
@@ -81,8 +74,6 @@ namespace ChatTrialSolution
                 await RunClientStreamingRpc(client, MsgValue.Text, Msgread).ConfigureAwait(false); // Doesnt work 
                 // await RunBidirectionalRpc(client, MsgValue.Text, Msgread).ConfigureAwait(false);// Doesnt work 
 
-                //MsgValue.Text = $"{Message }";
-                //Msgread.Text = ResponseMessageFromserver;
             }
             catch (Exception ex)
             {
@@ -96,23 +87,7 @@ namespace ChatTrialSolution
 
             
         }
-        /// <summary>
-        /// A delegating handler that changes the request HTTP version to HTTP/3.
-        /// </summary>
-        public class Http3Handler : DelegatingHandler
-        {
-            public Http3Handler() { }
-            public Http3Handler(HttpMessageHandler innerHandler) : base(innerHandler) { }
-            request.Properties[WebAssemblyEnableStreamingResponseKey] = true; 
-            protected override Task<HttpResponseMessage> SendAsync(
-                HttpRequestMessage request, CancellationToken cancellationToken)
-            {
-                request.Version =HttpVersion.Version20;// new win11 have http3 so it may work there (Windows 11 Build 22000 or later OR Windows Server 2022.And TLS 1.3 or later connection.)
-                request.VersionPolicy = HttpVersionPolicy.RequestVersionExact;
-
-                return base.SendAsync(request, cancellationToken);
-            }
-        }
+        
         private static async Task RunSyncUnaryRpc(FooService.FooServiceClient client, string textMsg, Microsoft.UI.Xaml.Controls.TextBlock readTxt)
         {
             Console.WriteLine("Starting unary RPC example...\n", ConsoleColor.Blue);
@@ -237,27 +212,6 @@ namespace ChatTrialSolution
             }
             Console.WriteLine("\n*****************************Finished!*****************************************\n", ConsoleColor.Blue);
         }
-
-
-        public Streams[] StreamingList => new[]
-        {
-        Streams.Unary,
-        Streams.ClientSide,
-        Streams.ServerSide,
-        Streams.Bidirection,
-
-    };
-        public enum Streams
-        {
-            Unary,
-            ClientSide,
-            ServerSide,
-            Bidirection,
-        }
-        //public async void Streaming_SelectionChanged(object sender, SelectionChangedEventArgs  e)
-        //{
-
-        //}
 
     }
 }
